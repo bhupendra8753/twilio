@@ -7,24 +7,43 @@ const PORT = 8767;
 const app = express();
 app.use(urlencoded({ extended: false }));
 
-// Create a route to handle incoming SMS messages
-// This is where the magic happens!
-app.post('/sms', (request, response) => {
-  console.log(
-    `Incoming message from ${request.body.From}: ${request.body.Body}`
-  );
+// This is the URL that will be requested when your number receives a call
+// It will be requested without a "Digits" parameter intitially, but subsequent
+// requests will contain "Digits"
+app.post('/voice', (request, response) => {
+  const { Digits, From } = request.body;
+  
+  console.log('Incoming call from ', From);
+  let twiml = '';
+
+  // This is the first time the URL has been requested, so no Digits
+  if (!Digits) {
+    twiml = `
+      <Response>
+        <Gather>
+          <Say>
+            Press any series of numbers on your keypad. Go nuts. You can end
+            your D T M F rampage by pressing the hash key.
+          </Say>
+        </Gather>
+      </Response>
+    `;
+  } else {
+    // If Digits has been populated, repeat them back
+    twiml = `
+      <Response>
+        <Say>You entered: ${Digits}</Say>
+        <Say>Goodbye!</Say>
+      </Response>
+    `;
+  }
+
+  // Finally, return the TwiML
   response.type('text/xml');
-  response.send(`
-    // Replace these commented-out lines with TwiML that returns
-    // "TwilioQuest rules!"
-    <?xml version="1.0" encoding="UTF-8"?>
-    <Response>
-    <Message>TwilioQuest rules</Message>
-</Response>
-  `);
+  response.send(twiml);
 });
 
-// Use a tunneling tool like ngrok to expose your server to the public Internet!
+// Use a tunneling tool like ngrok to expose this server to the public Internet!
 // Create and run an HTTP server which can handle incoming requests
 const server = http.createServer(app);
 server.listen(PORT, () =>
