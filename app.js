@@ -3,7 +3,7 @@ const express = require('express');
 const { urlencoded } = require('body-parser');
 
 // Set up our express web application
-const PORT = 3000;
+var port = process.env.PORT || 3000;
 const app = express();
 app.use(urlencoded({ extended: false }));
 
@@ -46,6 +46,6 @@ app.post('/voice', (request, response) => {
 // Use a tunneling tool like ngrok to expose this server to the public Internet!
 // Create and run an HTTP server which can handle incoming requests
 const server = http.createServer(app);
-server.listen(PORT, () =>
+server.listen(port, () =>
   console.log(`Express server listening on localhost:${PORT}`)
 );
