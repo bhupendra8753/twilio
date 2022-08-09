@@ -3,7 +3,7 @@ const express = require('express');
 const { urlencoded } = require('body-parser');
 
 // Set up our express web application
-const PORT = 8767;
+const PORT = 3000;
 const app = express();
 app.use(urlencoded({ extended: false }));
 
