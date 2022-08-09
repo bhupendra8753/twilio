@@ -47,5 +47,5 @@ app.post('/voice', (request, response) => {
 // Create and run an HTTP server which can handle incoming requests
 const server = http.createServer(app);
 server.listen(port, () =>
-  console.log(`Express server listening on localhost:${PORT}`)
+  console.log(`Express server listening on localhost:${port}`)
 );
